@@ -1,0 +1,34 @@
+.crater-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: crater 4.8s var(--ease-in-out) infinite alternate;
+}
+
+.lost-walk {
+  animation: drift 22s linear infinite;
+}
+
+.lost-walk:nth-of-type(2) {
+  animation-delay: -7s;
+}
+
+.lost-walk:nth-of-type(3) {
+  animation-delay: -13s;
+}
+
+@keyframes crater {
+  from { opacity: 0.28; }
+  to { opacity: 0.85; }
+}
+
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(26px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crater-glow,
+  .lost-walk {
+    animation: none;
+  }
+}

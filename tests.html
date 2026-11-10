@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pruebas · Ruta Cero</title>
+  <style>
+    body { font-family: ui-monospace, monospace; background: #121012; color: #e8dcc4; margin: 24px; }
+    .ok { color: #d7ec9a; }
+    .fail { color: #ffb0a4; }
+  </style>
+</head>
+<body>
+  <h1>Pruebas</h1>
+  <pre id="out">Corriendo…</pre>
+  <script type="module">
+    import { runAll } from "./js/tests/suite.js";
+    const results = runAll();
+    const out = document.getElementById("out");
+    out.textContent = results.map((result) => `${result.ok ? "ok " : "FAIL"} ${result.name}${result.error ? `\n  ${result.error}` : ""}`).join("\n");
+    out.className = results.every((result) => result.ok) ? "ok" : "fail";
+  </script>
+</body>
+</html>

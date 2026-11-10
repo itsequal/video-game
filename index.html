@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruta Cero: El Último Convoy</title>
+  <meta name="theme-color" content="#121012">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='8' width='16' height='12' rx='1.5' fill='%23e8dcc4'/%3E%3Cpath d='M9 8V6h6v2M4 13h16' fill='none' stroke='%23121012' stroke-width='1.6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/screens.css">
+  <link rel="stylesheet" href="css/graph.css">
+  <link rel="stylesheet" href="css/art.css">
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0" aria-hidden="true">
+    <defs>
+      <symbol id="icon-infected" viewBox="0 0 24 24">
+        <circle cx="12" cy="5.5" r="2.2" fill="currentColor" stroke="none"/>
+        <path d="M8 22v-7l4-3 4 3v7M7.5 13.5 12 11l4.5 2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-meds" viewBox="0 0 24 24">
+        <path d="M9 6V4h6v2M8 6h8v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V6zM12 10v6M9.5 13h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-fuel" viewBox="0 0 24 24">
+        <path d="M8 7h6l2 2v11H8V7zM10 7V4.5h3M10.5 11h3.2v3h-3.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-food" viewBox="0 0 24 24">
+        <path d="M5 12h14c-.8 5-4 7-7 7s-6.2-2-7-7zM8 12c.6-3.2 7.4-3.2 8 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-neutral" viewBox="0 0 24 24">
+        <path d="M12 3 21 12 12 21 3 12Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-blocked" viewBox="0 0 24 24">
+        <path d="M3 19 8 10l4 6 4-8 5 11H3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-entry" viewBox="0 0 24 24">
+        <path d="M5 20V8h14v12M9 20v-7h6v7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-exit" viewBox="0 0 24 24">
+        <path d="M7 20 11 7h2l4 13M12 10v8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-clinic" viewBox="0 0 24 24">
+        <path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6V4Z" fill="currentColor" stroke="none"/>
+      </symbol>
+      <symbol id="icon-station" viewBox="0 0 24 24">
+        <path d="M7 4h8v16H7V4zM15 8h3v6M9 8h4v3H9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-market" viewBox="0 0 24 24">
+        <path d="M3 9h18v3l-3-2-3 2-3-2-3 2-3-2-3 2V9zM7 12v8h10v-8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-colonial" viewBox="0 0 24 24">
+        <path d="M8 20V11l4-7 4 7v9M12 4V2M10.5 20v-4h3v4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-refuge" viewBox="0 0 24 24">
+        <path d="M3 20V11l3-4 3 4v9M9 20V12l3-4 3 4v8M15 20V11l3-4 3 4v9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-tower" viewBox="0 0 24 24">
+        <path d="M12 21 8 8h8L12 21zM12 8V3M7 12h10M9 16h6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-briefcase" viewBox="0 0 24 24">
+        <path d="M4 8h16v12H4V8zM9 8V5.5h6V8M4 13h16M11 11.5h2V15h-2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M12 2.5V6M12 18v3.5M2.5 12H6M18 12h3.5M5 5l2.4 2.4M16.6 16.6 19 19M19 5l-2.4 2.4M7.4 16.6 5 19" fill="none" stroke="currentColor" stroke-width="1.7"/>
+      </symbol>
+      <symbol id="icon-radio" viewBox="0 0 24 24">
+        <path d="M5 10h14v9H5v-9zM12 10V5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <circle cx="12" cy="4.2" r="1.2" fill="currentColor" stroke="none"/>
+        <path d="M8 15h4" fill="none" stroke="currentColor" stroke-width="1.7"/>
+      </symbol>
+      <symbol id="icon-pickup" viewBox="0 0 24 24">
+        <path d="M2 15h12l3-4h4v4h1v2.5H2V15z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="6.5" cy="18" r="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="17" cy="18" r="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      </symbol>
+      <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(40)">
+        <line x1="0" y1="0" x2="0" y2="7" stroke="#8a5a42" stroke-width="2"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <p id="run-meta" class="run-meta" hidden></p>
+  <main id="app">
+    <section id="screen-intro" class="screen screen-intro is-active" aria-label="Introducción"></section>
+    <section id="screen-world" class="screen screen-world" aria-label="Mapa de la región"></section>
+    <section id="screen-city" class="screen screen-city" aria-label="Pueblo"></section>
+  </main>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="modal-root"></div>
+  <div id="tooltip" class="tooltip is-out" role="tooltip" hidden></div>
+  <div id="live" class="sr-only" aria-live="polite"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

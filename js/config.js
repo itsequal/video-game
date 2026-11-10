@@ -1,0 +1,65 @@
+export const CONFIG = {
+  hpStart: 100,
+  hpMax: 100,
+  fuelStart: 80,
+  medsGoal: 30,
+  edgeCost: [2, 10],
+  damage: [1, 15],
+  meds: [1, 12],
+  fuelReward: [5, 20],
+  food: [5, 20],
+  nodeCount: 6,
+  timerSeconds: 120,
+  lowFuelThreshold: 25,
+  cityAttempts: 50,
+  gaugeMax: 120,
+  profiles: {
+    clinic: {
+      label: "Clínica rural",
+      icon: "clinic",
+      weights: { meds: 6, infected: 3, fuel: 3, food: 2, neutral: 1 },
+      blockedChance: 0.15,
+    },
+    station: {
+      label: "Estación de servicio",
+      icon: "station",
+      weights: { fuel: 6, meds: 3, infected: 1, food: 1, neutral: 2 },
+      blockedChance: 0.08,
+    },
+    market: {
+      label: "Mercado municipal",
+      icon: "market",
+      weights: { food: 5, meds: 4, fuel: 3, infected: 1, neutral: 2 },
+      blockedChance: 0.1,
+    },
+    colonial: {
+      label: "Pueblo colonial",
+      icon: "colonial",
+      weights: { neutral: 3, meds: 4, fuel: 3, food: 3, infected: 2 },
+      blockedChance: 0.35,
+    },
+    final: {
+      label: "La Estación",
+      icon: "tower",
+      weights: { meds: 6, fuel: 4, infected: 2, food: 2, neutral: 1 },
+      blockedChance: 0.05,
+    },
+    refuge: {
+      label: "Asentamiento",
+      icon: "refuge",
+      weights: { neutral: 1 },
+      blockedChance: 0,
+    },
+  },
+};
+
+export const NODE_META = {
+  infected: { label: "Zona infectada", sub: "Los perdidos", icon: "infected", shape: "triangle" },
+  meds: { label: "Zona de recursos", sub: "Medicina", icon: "meds", shape: "circle" },
+  fuel: { label: "Zona de reabastecimiento", sub: "Gasolina", icon: "fuel", shape: "hex" },
+  food: { label: "Zona de reabastecimiento de salud", sub: "Comida", icon: "food", shape: "bowl" },
+  neutral: { label: "Zona neutra", sub: "Segura", icon: "neutral", shape: "diamond" },
+  blocked: { label: "Zona bloqueada", sub: "Intransitable", icon: "blocked", shape: "rubble" },
+  entry: { label: "Entrada", sub: "El convoy entra aquí", icon: "entry", shape: "gate" },
+  exit: { label: "Salida", sub: "De vuelta a la carretera", icon: "exit", shape: "diamond" },
+};

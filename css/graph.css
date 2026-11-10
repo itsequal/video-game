@@ -1,0 +1,195 @@
+.town {
+  cursor: default;
+}
+
+.town.is-open {
+  cursor: pointer;
+}
+
+.town-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  fill: var(--map-ink);
+  font-weight: 600;
+}
+
+.town-sub {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  fill: #6a5348;
+}
+
+.road {
+  fill: none;
+  stroke: #8d7158;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.marker {
+  fill: none;
+  stroke: var(--marker);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+}
+
+.marker.is-drawing {
+  transition: stroke-dashoffset 600ms var(--ease-in-out);
+}
+
+.pencil {
+  fill: none;
+  stroke: var(--pencil);
+  stroke-width: 1.6;
+  stroke-dasharray: 3 4;
+}
+
+.you-are-here {
+  fill: var(--marker);
+  stroke: #f3e6d4;
+  stroke-width: 1.5;
+}
+
+.map-title {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 22px;
+  fill: var(--map-ink);
+  letter-spacing: 0.08em;
+}
+
+.map-caption,
+.compass {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: #6d584c;
+  letter-spacing: 0.12em;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node .hit {
+  fill: transparent;
+  stroke: transparent;
+}
+
+.node .body {
+  fill: #1a1614;
+  stroke: var(--node-color, var(--paper));
+  stroke-width: 2.5;
+}
+
+.node[data-type="infected"] { --node-color: var(--infection); }
+.node[data-type="meds"] { --node-color: #d7ec9a; }
+.node[data-type="fuel"] { --node-color: var(--ochre); }
+.node[data-type="food"] { --node-color: #e7a07a; }
+.node[data-type="neutral"] { --node-color: var(--paper-dim); }
+.node[data-type="blocked"] { --node-color: #8a6a58; }
+.node[data-type="entry"] { --node-color: var(--paper); }
+.node[data-type="exit"] { --node-color: var(--campfire); }
+
+.node.is-reachable .body {
+  stroke-width: 4;
+  stroke: var(--campfire);
+}
+
+.node.is-selected .body {
+  fill: #322822;
+}
+
+.node[data-type="blocked"] .body {
+  fill: url(#hatch);
+}
+
+.node-label,
+.node-value {
+  font-family: var(--font-ui);
+  fill: var(--paper);
+  stroke: #121012;
+  stroke-width: 3px;
+  paint-order: stroke fill;
+  font-size: 13px;
+}
+
+.node-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--campfire);
+}
+
+.label-pill {
+  fill: rgba(18, 16, 18, 0.88);
+}
+
+.edge line {
+  stroke: #6b5344;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.edge.is-blocked line {
+  stroke-dasharray: 7 8;
+  opacity: 0.45;
+}
+
+.edge.is-chosen line {
+  stroke: var(--campfire);
+  transition: stroke-dashoffset var(--dur-road) var(--ease-out);
+}
+
+.sign-bg {
+  fill: var(--paper);
+  stroke: #2c211c;
+  stroke-width: 1;
+}
+
+.sign-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+.node-shape.is-shaking {
+  animation: shake 200ms var(--ease-out);
+}
+
+.node.is-flash .body {
+  animation: flash-fill 200ms linear;
+}
+
+.convoy-token {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 42px;
+  height: 24px;
+  margin-left: -21px;
+  margin-top: -16px;
+  z-index: 3;
+  pointer-events: none;
+  color: var(--paper);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .town.is-open:hover .pencil,
+  .town.is-open:hover .town-ring {
+    stroke: #8a3b1c;
+  }
+
+  .node.is-reachable:hover .body {
+    fill: #241c18;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge.is-chosen line,
+  .marker.is-drawing {
+    transition: none;
+  }
+
+  .node-shape.is-shaking {
+    animation: none;
+  }
+}
