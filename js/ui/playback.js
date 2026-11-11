@@ -31,6 +31,7 @@ export async function playRoute({ view, city, result }) {
       view.revealStep(step);
       view.setStats(step.snapshot);
       view.spawnDelta(step);
+      view.react(step.event);
       await pause(reducedMotion() ? 60 : 260, control.signal);
     }
     if (!control.signal.aborted && result.reason === "varado" && result.from) {
@@ -48,6 +49,7 @@ export async function playRoute({ view, city, result }) {
       const rect = view.stage.getBoundingClientRect();
       const token = view.stage.querySelector(".convoy-token");
       token.style.transform = `translate(${(node.x / 100) * rect.width}px, ${(node.y / 100) * rect.height}px)`;
+      view.settlePortrait(result);
     }
     skip.remove();
   }

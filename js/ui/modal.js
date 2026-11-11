@@ -1,14 +1,18 @@
 import { reducedMotion } from "./motion.js";
+import { createSprite } from "./pixelSprite.js";
 
 export function createModals(root) {
   let openNow = false;
+  let portraitSprite = null;
 
   function close() {
+    portraitSprite?.destroy();
+    portraitSprite = null;
     root.replaceChildren();
     openNow = false;
   }
 
-  function open({ kicker, title, paragraphs = [], lore, actions }) {
+  function open({ kicker, title, paragraphs = [], lore, actions, portrait }) {
     close();
     openNow = true;
     const back = document.createElement("div");
@@ -19,16 +23,36 @@ export function createModals(root) {
     card.setAttribute("aria-modal", "true");
     card.setAttribute("aria-labelledby", "modal-title");
 
-    if (kicker) {
-      const kick = document.createElement("p");
-      kick.className = "kicker";
-      kick.textContent = kicker;
-      card.appendChild(kick);
-    }
     const heading = document.createElement("h3");
     heading.id = "modal-title";
     heading.textContent = title;
-    card.appendChild(heading);
+    if (portrait) {
+      const head = document.createElement("div");
+      head.className = "modal-head";
+      const holder = document.createElement("div");
+      holder.className = "modal-portrait";
+      portraitSprite = createSprite({ crop: "portrait", targetHeight: 90 });
+      portraitSprite.setFrame(portrait);
+      holder.appendChild(portraitSprite.root);
+      const titles = document.createElement("div");
+      if (kicker) {
+        const kick = document.createElement("p");
+        kick.className = "kicker";
+        kick.textContent = kicker;
+        titles.appendChild(kick);
+      }
+      titles.appendChild(heading);
+      head.append(holder, titles);
+      card.appendChild(head);
+    } else {
+      if (kicker) {
+        const kick = document.createElement("p");
+        kick.className = "kicker";
+        kick.textContent = kicker;
+        card.appendChild(kick);
+      }
+      card.appendChild(heading);
+    }
     for (const paragraph of paragraphs) {
       const p = document.createElement("p");
       p.textContent = paragraph;

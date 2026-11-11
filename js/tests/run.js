@@ -1,4 +1,8 @@
+import { testSpriteSheet } from "./assets.js";
 import { runAll } from "./suite.js";
+
+testSpriteSheet();
+console.log("ok  la hoja del errante coincide con su metadata");
 
 const results = runAll();
 let failed = 0;

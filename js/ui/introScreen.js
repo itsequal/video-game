@@ -1,6 +1,8 @@
 import { NODE_META } from "../config.js";
 import { BRIEFING, RADIO, rangeLine } from "../content/narrative.js";
 import { buildIntroScene } from "../art/introScene.js";
+import { attachParallax } from "../art/parallax.js";
+import { createSprite } from "./pixelSprite.js";
 
 const LEGEND = ["infected", "meds", "fuel", "food", "neutral", "blocked"];
 const LEGEND_COLOR = {
@@ -69,20 +71,32 @@ export function renderIntro(container, { onStart }) {
     node.style.animationDelay = `${index * 50}ms`;
   });
 
-  const stopParallax = buildIntroScene(root.querySelector(".intro-art"));
+  const art = root.querySelector(".intro-art");
+  buildIntroScene(art);
+  const errante = createSprite({
+    targetHeight: () => Math.round(window.innerHeight * 0.34),
+    idle: true,
+    shadow: true,
+  });
+  errante.root.classList.add("intro-errante");
+  errante.root.dataset.depth = "1";
+  errante.root.dataset.pixel = "1";
+  art.appendChild(errante.root);
+  const stopParallax = attachParallax(art);
   const skip = () => panel.classList.add("is-skipped");
   root.addEventListener("pointerdown", skip);
   function onKey() { skip(); }
   window.addEventListener("keydown", onKey);
 
-  root.querySelector("button").addEventListener("click", () => {
+  const stop = () => {
     stopParallax();
+    errante.destroy();
     window.removeEventListener("keydown", onKey);
+  };
+  root.querySelector("button").addEventListener("click", () => {
+    stop();
     onStart();
   });
 
-  return () => {
-    stopParallax();
-    window.removeEventListener("keydown", onKey);
-  };
+  return stop;
 }

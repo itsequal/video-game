@@ -29,7 +29,10 @@ export function attachParallax(root) {
       item.vy += ((goalY - item.y) * 90 - item.vy * 16) * dt;
       item.x += item.vx * dt;
       item.y += item.vy * dt;
-      layer.style.transform = `translate(${item.x.toFixed(2)}px, ${item.y.toFixed(2)}px)`;
+      const dpr = window.devicePixelRatio || 1;
+      const x = layer.dataset.pixel != null ? Math.round(item.x * dpr) / dpr : item.x;
+      const y = layer.dataset.pixel != null ? Math.round(item.y * dpr) / dpr : item.y;
+      layer.style.transform = `translate(${x}px, ${y}px)`;
     });
     frame = requestAnimationFrame(step);
   }

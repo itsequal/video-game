@@ -19,6 +19,7 @@ export function evaluateRoute(city, route, startState) {
     meds: startState.meds,
   };
   const steps = [];
+  const arrived = new Set();
 
   for (let i = 0; i < route.length - 1; i += 1) {
     const from = route[i];
@@ -28,8 +29,12 @@ export function evaluateRoute(city, route, startState) {
       return fail("varado", steps, state, { from, at: to, cost });
     }
     state.fuel -= cost;
-    const event = city.nodes[to].event;
-    applyEvent(state, event);
+    let event = null;
+    if (!arrived.has(to)) {
+      arrived.add(to);
+      event = city.nodes[to].event;
+      applyEvent(state, event);
+    }
     steps.push({
       u: from,
       v: to,

@@ -95,6 +95,12 @@
   stroke: var(--campfire);
 }
 
+.node.is-return .body {
+  stroke-width: 4;
+  stroke: var(--paper);
+  stroke-dasharray: 5 4;
+}
+
 .node.is-selected .body {
   fill: #322822;
 }
@@ -178,7 +184,8 @@
     stroke: #8a3b1c;
   }
 
-  .node.is-reachable:hover .body {
+  .node.is-reachable:hover .body,
+  .node.is-return:hover .body {
     fill: #241c18;
   }
 }

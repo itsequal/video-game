@@ -1,6 +1,7 @@
 import { CONFIG } from "../config.js";
 import { formatClock } from "../content/narrative.js";
 import { reducedMotion } from "./motion.js";
+import { createSprite } from "./pixelSprite.js";
 
 function polar(deg, radius) {
   const rad = (deg * Math.PI) / 180;
@@ -24,6 +25,7 @@ export function createHud(container, { showTime = false } = {}) {
   container.replaceChildren();
   container.classList.add("hud");
   container.innerHTML = `
+    <div class="hud-portrait"></div>
     <div class="hud-block">
       <span class="case-kicker">Salud</span>
       <div class="hp-track" role="meter" aria-label="Salud" aria-valuemin="0" aria-valuemax="${CONFIG.hpMax}"><div class="hp-fill"></div></div>
@@ -71,8 +73,11 @@ export function createHud(container, { showTime = false } = {}) {
   const warn = container.querySelector(".fuel-warn");
   let warned30 = false;
   let warned10 = false;
+  const portrait = createSprite({ crop: "portrait", targetHeight: 56 });
+  container.querySelector(".hud-portrait").appendChild(portrait.root);
 
   function setStats({ hp, fuel, meds }) {
+    portrait.noteHp(hp);
     const hpRatio = Math.max(0, Math.min(1, hp / CONFIG.hpMax));
     hpFill.style.transform = `scaleX(${hpRatio})`;
     hpNum.textContent = String(Math.max(0, Math.round(hp)));
@@ -127,5 +132,12 @@ export function createHud(container, { showTime = false } = {}) {
     return null;
   }
 
-  return { setStats, setProjected, setTime };
+  return {
+    setStats,
+    setProjected,
+    setTime,
+    react: (kind) => portrait.react(kind),
+    settle: (name) => portrait.settle(name),
+    destroy: () => portrait.destroy(),
+  };
 }

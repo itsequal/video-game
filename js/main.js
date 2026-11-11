@@ -28,6 +28,7 @@ let world = generateWorld(createRng(seed));
 const store = createGameState(world);
 let introCleanup = () => {};
 let cityView = null;
+let worldHud = null;
 let mode = "intro";
 
 function paintMeta() {
@@ -49,12 +50,14 @@ function bootIntro() {
 async function enterWorld() {
   mode = "world";
   paintMeta();
+  worldHud?.destroy();
   const view = renderWorld(screens.nodes.world, {
     world,
     state: store.get(),
     onChoose: (town, origin) => { enterCity(town, origin); },
   });
-  createHud(view.stats, { showTime: false }).setStats(store.get());
+  worldHud = createHud(view.stats, { showTime: false });
+  worldHud.setStats(store.get());
   await screens.show("world");
 }
 
@@ -141,6 +144,7 @@ function showFailure(city, result) {
     kicker: city.name,
     title: copy.title,
     paragraphs,
+    portrait: "down",
     actions: [{ id: "back", label: "Volver al inicio", primary: true }],
   });
 }
@@ -153,6 +157,7 @@ function showSummary(city, before, result, lore) {
       `Salud ${before.hp} → ${result.snapshot.hp}. Gasolina ${before.fuel} → ${result.snapshot.fuel} L. Maletín ${before.meds} → ${result.snapshot.meds}.`,
     ],
     lore,
+    portrait: "calm",
     actions: [{ id: "next", label: "Seguir hacia el este", primary: true }],
   });
 }
@@ -163,12 +168,14 @@ async function showVictory(result, lore) {
     title: VICTORY.title,
     paragraphs: [VICTORY.text, `El maletín cierra con ${result.snapshot.meds} frascos.`],
     lore,
+    portrait: "calm",
     actions: [{ id: "next", label: "Seguir", primary: true }],
   });
   const choice = await modals.open({
     kicker: "Después de la ruta",
     title: "Qué hacer con lo que queda",
     paragraphs: [CHOICE.question],
+    portrait: "calm",
     actions: [
       { id: "rebuild", label: CHOICE.rebuild.label, primary: true },
       { id: "anew", label: CHOICE.anew.label },
@@ -179,6 +186,7 @@ async function showVictory(result, lore) {
     kicker: "El convoy",
     title: choice === "rebuild" ? "Volver a nombrar las calles" : "Sin bandera",
     paragraphs: [ending.line],
+    portrait: "calm",
     actions: [{ id: "back", label: "Volver al inicio", primary: true }],
   });
 }
@@ -186,6 +194,8 @@ async function showVictory(result, lore) {
 function restart() {
   cityView?.destroy();
   cityView = null;
+  worldHud?.destroy();
+  worldHud = null;
   modals.close();
   seed = fixedSeed ?? (Math.floor(Math.random() * 1e9) >>> 0);
   world = generateWorld(createRng(seed));

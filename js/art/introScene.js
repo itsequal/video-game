@@ -2,7 +2,6 @@ import { createRng } from "../rng.js";
 import { el } from "./svg.js";
 import { buildSkyline } from "./skyline.js";
 import { addPalm, addBanana, addVines } from "./foliage.js";
-import { attachParallax } from "./parallax.js";
 
 function car(parent, x, y, scale, rust) {
   const g = el("g", { transform: `translate(${x} ${y}) scale(${scale})` }, parent);
@@ -18,25 +17,6 @@ function figure(parent, x, y, scale) {
   const g = el("g", { class: "lost-walk", transform: `translate(${x} ${y}) scale(${scale})` }, parent);
   el("circle", { cx: 0, cy: -28, r: 4, fill: "#1a1010" }, g);
   el("path", { d: "M-5 -22 L0 -8 L6 -22 M0 -16 L0 -2 M-6 8 L0 -2 L5 10", fill: "none", stroke: "#1a1010", "stroke-width": 2.4, "stroke-linecap": "round" }, g);
-  return g;
-}
-
-function protagonist(parent) {
-  const g = el("g", { transform: "translate(1160 610)" }, parent);
-  el("g", { transform: "translate(-3 -4)", fill: "#e89a3c", opacity: "0.9" }, g);
-  const rim = g.lastChild;
-  const draw = (target, fill) => {
-    el("path", { d: "M28 150 L40 78 H78 L92 150 Z", fill }, target);
-    el("path", { d: "M46 78 L52 46 H74 L80 78 Z", fill }, target);
-    el("circle", { cx: 64, cy: 32, r: 16, fill }, target);
-    el("path", { d: "M74 58 H104 V118 H78 Z", fill }, target);
-    el("path", { d: "M40 86 L16 118 H34 L48 96 Z", fill }, target);
-    el("rect", { x: -6, y: 108, width: 28, height: 36, rx: 2, fill: fill === "#140c0a" ? "#b7b1a6" : fill }, target);
-    el("path", { d: "M2 108 V98 H16 V108", fill: "none", stroke: fill === "#140c0a" ? "#6e6a64" : fill, "stroke-width": 3 }, target);
-    el("rect", { x: 6, y: 122, width: 6, height: 8, fill: fill === "#140c0a" ? "#2a2826" : fill }, target);
-  };
-  draw(rim, "#e89a3c");
-  draw(g, "#140c0a");
   return g;
 }
 
@@ -92,7 +72,4 @@ export function buildIntroScene(container) {
   addPalm(front, 180, 640, 1.05, 1);
   addPalm(front, 1380, 620, 1.2, -1);
   addBanana(front, 1280, 700, 0.9, -1);
-  protagonist(front);
-
-  return attachParallax(svg);
 }

@@ -243,6 +243,7 @@ export function renderCity(container, city, startStats, { onExecute, modalOpen }
     const chosen = new Set();
     for (let i = 0; i < route.length - 1; i += 1) chosen.add(keyOf(route[i], route[i + 1]));
     const reach = new Set(planner.reachable());
+    const onRoute = new Set(route);
     for (const edge of svg.querySelectorAll(".edge")) {
       const on = chosen.has(edge.dataset.key);
       const was = edge.classList.contains("is-chosen");
@@ -261,9 +262,11 @@ export function renderCity(container, city, startStats, { onExecute, modalOpen }
     }
     for (const group of Object.values(nodeGroups)) {
       const id = group.dataset.id;
-      group.classList.toggle("is-selected", route.includes(id));
-      group.classList.toggle("is-reachable", reach.has(id));
-      group.setAttribute("aria-pressed", route.includes(id) ? "true" : "false");
+      const wayBack = reach.has(id) && onRoute.has(id);
+      group.classList.toggle("is-selected", onRoute.has(id));
+      group.classList.toggle("is-return", wayBack);
+      group.classList.toggle("is-reachable", reach.has(id) && !wayBack);
+      group.setAttribute("aria-pressed", onRoute.has(id) ? "true" : "false");
     }
     hud.setProjected(planner.projectedFuel(), stats.fuel);
     executeBtn.disabled = !planner.isComplete();
@@ -362,6 +365,7 @@ export function renderCity(container, city, startStats, { onExecute, modalOpen }
       const group = nodeGroups[step.v];
       const value = group.querySelector(".node-value");
       const text = eventDelta(step.event);
+      if (!text && group.classList.contains("is-revealed")) return;
       value.textContent = text;
       group.classList.add("is-revealed");
       const node = city.nodes[step.v];
@@ -387,6 +391,13 @@ export function renderCity(container, city, startStats, { onExecute, modalOpen }
       stage.appendChild(badge);
       badge.addEventListener("animationend", () => badge.remove());
     },
+    react(event) {
+      if (event?.kind) hud.react(event.kind);
+    },
+    settlePortrait(result) {
+      const low = result.snapshot.hp <= 25;
+      hud.settle(!result.ok || low ? "down" : "calm");
+    },
     lock() {
       locked = true;
       tooltip.hide();
@@ -400,6 +411,7 @@ export function renderCity(container, city, startStats, { onExecute, modalOpen }
       document.removeEventListener("keydown", onKey);
       daylight?.cancel();
       tooltip.hide();
+      hud.destroy();
     },
   };
 }

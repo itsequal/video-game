@@ -1,0 +1,61 @@
+.pixel-sprite {
+  position: relative;
+  pointer-events: none;
+  display: inline-block;
+}
+
+.pixel-sprite-window {
+  overflow: hidden;
+}
+
+.pixel-sprite-strip {
+  will-change: transform;
+}
+
+.pixel-sprite img {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.pixel-shadow {
+  position: absolute;
+  left: 18%;
+  right: 22%;
+  bottom: 0;
+  background: rgba(8, 6, 6, 0.55);
+}
+
+.intro-errante {
+  position: absolute;
+  right: 7%;
+  bottom: 8%;
+  z-index: 2;
+}
+
+.hud-portrait {
+  flex: none;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.modal-head h3 {
+  margin-top: 6px;
+}
+
+@media (max-width: 800px) {
+  .intro-errante {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-sprite-strip {
+    will-change: auto;
+  }
+}

@@ -112,22 +112,58 @@ test("la ruta no repite, no salta y no entra a un deslave", () => {
       node("entry", "entry"),
       node("a", "neutral"),
       node("b", "blocked"),
+      node("c", "neutral"),
+      node("d", "neutral"),
       node("exit", "exit"),
     ],
-    [["entry", "a", 3], ["a", "b", 3], ["a", "exit", 4]],
+    [
+      ["entry", "a", 3],
+      ["a", "b", 3],
+      ["a", "c", 5],
+      ["c", "d", 4],
+      ["a", "d", 6],
+      ["a", "exit", 4],
+      ["d", "exit", 2],
+    ],
   );
   const planner = createPlanner(city);
   assert(planner.tryAdd("exit").reason === "no-edge", "atajo");
   assert(planner.tryAdd("a").ok, "primer tramo");
-  assert(planner.tryAdd("a").reason === "repeat", "repetir");
+  assert(planner.tryAdd("a").reason === "repeat", "el nodo actual no es el regreso");
   assert(planner.tryAdd("b").reason === "blocked", "bloqueo");
   assert(planner.projectedFuel() === 3, "proyección");
+  assert(planner.tryAdd("entry").ok, "regreso al que acaba de dejar");
+  assert(planner.getRoute().join(",") === "entry,a,entry", "el regreso se anexa");
+  assert(planner.projectedFuel() === 6, "suma los litros de esa calle");
+  assert(planner.reachable().includes("a"), "marca el camino de vuelta");
+  planner.undo();
+  assert(planner.getRoute().join(",") === "entry,a", "deshacer quita el tramo");
+  assert(planner.projectedFuel() === 3, "deshacer no cobra");
   planner.undo();
   assert(planner.getRoute().join(",") === "entry", "deshacer");
+
+  planner.tryAdd("a");
+  planner.tryAdd("c");
+  planner.tryAdd("d");
+  assert(planner.tryAdd("a").reason === "repeat", "visitado que no es el anterior");
+  assert(planner.tryAdd("entry").reason === "no-edge", "visitado sin camino directo");
+  assert(planner.reachable().includes("c"), "el anterior sí se puede");
+  assert(!planner.reachable().includes("a"), "el repetido no se ofrece");
+  assert(!planner.reachable().includes("entry"), "sin calle no se ofrece");
+
+  planner.reset();
   planner.tryAdd("a");
   planner.tryAdd("exit");
   assert(planner.isComplete(), "completa");
+  assert(planner.reachable().includes("a"), "la salida no congela el regreso");
+  assert(!planner.reachable().includes("d"), "la salida no abre un avance nuevo");
   assert(planner.tryAdd("b").reason === "done", "cerrada");
+  const parked = planner.projectedFuel();
+  assert(planner.tryAdd("a").ok, "puede dejar la salida");
+  assert(!planner.isComplete(), "la ruta queda incompleta");
+  assert(planner.projectedFuel() === parked + 4, "dejar la salida también gasta");
+  planner.undo();
+  assert(planner.isComplete() && planner.projectedFuel() === parked, "deshacer el regreso es gratis");
   planner.reset();
   assert(planner.getRoute().length === 1, "reinicio");
 });
@@ -180,6 +216,29 @@ test("el evaluador respeta gasolina, salud y la meta", () => {
   assert(enough.ok, "treinta frascos");
   const practice = evaluateRoute(open, ["entry", "a", "exit"], { hp: 20, fuel: 10, meds: 0 });
   assert(practice.ok, "un pueblo intermedio no exige la meta");
+});
+
+test("revisitar un nodo paga la calle y no repite el evento", () => {
+  const cases = [
+    { type: "meds", event: { kind: "meds", amount: 4 }, key: "meds", start: 1, once: 5 },
+    { type: "fuel", event: { kind: "fuel", amount: 7 }, key: "fuel", start: 20, once: 16 },
+    { type: "food", event: { kind: "food", amount: 15 }, key: "hp", start: 70, once: 85 },
+    { type: "infected", event: { kind: "infected", amount: 10 }, key: "hp", start: 40, once: 30 },
+  ];
+  for (const item of cases) {
+    const city = makeCity(
+      [node("entry", "entry"), node("a", item.type, item.event), node("exit", "exit")],
+      [["entry", "a", 3], ["a", "exit", 2]],
+    );
+    const start = { hp: 50, fuel: 30, meds: 0, [item.key]: item.start };
+    const result = evaluateRoute(city, ["entry", "a", "entry", "a", "exit"], start);
+    const spent = 3 + 3 + 3 + 2;
+    assert(result.ok, item.type);
+    assert(result.snapshot[item.key] === item.once, `${item.type} una sola vez`);
+    assert(result.snapshot.fuel === (item.key === "fuel" ? item.once : 30 - spent), `${item.type} litros`);
+    assert(result.steps[0].event.kind === item.event.kind, `${item.type} primera llegada`);
+    assert(result.steps[2].cost === 3 && result.steps[2].event == null, `${item.type} segunda llegada`);
+  }
 });
 
 function worstAmount(kind) {
